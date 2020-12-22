@@ -3,14 +3,14 @@
 ###################
 # Copy files
 
-ABC=/vagrant/wachlog_data
-chmod a+x $ABC/watchlog.sh
+SRC=/vagrant/wachlog_data
+chmod a+x $SRC/watchlog.sh
 
-mv $ABC/watchlog /etc/sysconfig/
-mv $ABC/watchlog.log  /var/log/
-mv $ABC/watchlog.sh /opt/
-mv $ABC/watchlog.service /etc/systemd/system/
-mv $ABC/watchlog.timer /etc/systemd/system/
+mv $SRC/watchlog /etc/sysconfig/
+mv $SRC/watchlog.log  /var/log/
+mv $SRC/watchlog.sh /opt/
+mv $SRC/watchlog.service /etc/systemd/system/
+mv $SRC/watchlog.timer /etc/systemd/system/
 
 ##################
 # Run timer and service
