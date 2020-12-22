@@ -172,3 +172,70 @@ WantedBy=multi-user.target
 Dec 22 14:12:53 systemD systemd[1]: Started Spawn-fcgi startup service by Otus.
 ```
 # 3. Дополнить unit-файл httpd (он же apache) возможностью запустить несколько инстансов сервера с разными конфигурационными файлами;
+Скопируем юнит файл и сделаем из него шаблон:
+```ruby
+[root@systemD system]# cp /usr/lib/systemd/system/httpd.service /etc/systemd/system/httpd@.service
+[root@systemD system]# vi /etc/systemd/system/httpd.service
+[root@systemD system]# cat /etc/systemd/system/httpd.service
+[Unit]
+Description=The Apache HTTP Server
+After=network.target remote-fs.target nss-lookup.target
+Documentation=man:httpd(8)
+Documentation=man:apachectl(8)
+
+[Service]
+Type=notify
+EnvironmentFile=/etc/sysconfig/httpd-%I
+ExecStart=/usr/sbin/httpd $OPTIONS -DFOREGROUND
+ExecReload=/usr/sbin/httpd $OPTIONS -k graceful
+ExecStop=/bin/kill -WINCH ${MAINPID}
+KillSignal=SIGCONT
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
+```
+Создадим теперь конфиг файлы
+```ruby
+[root@systemD system]# vi /etc/sysconfig/httpd-first
+[root@systemD system]# cat /etc/sysconfig/httpd-first
+OPTIONS=-f conf/first.conf
+[root@systemD system]# vi /etc/sysconfig/httpd-second
+[root@systemD system]# cat /etc/sysconfig/httpd-second
+OPTIONS=-f conf/second.conf
+[root@systemD system]# cp /etc/httpd/conf/httpd.conf /etc/httpd/conf/first.conf
+[root@systemD system]# cp /etc/httpd/conf/httpd.conf /etc/httpd/conf/second.conf
+```
+Для удачного запуска, в конфигурационных файлах должны быть указаны уникальные для каждого экземпляра опции Listen и PidFile. Конфиги можно скопировать и поправить только второй, в нем должны быты след опции:
+```ruby
+[root@systemD system]# cat /etc/httpd/conf/second.conf | grep -Ev ^#
+
+ServerRoot "/etc/httpd"
+
+Listen 8080
+```
+Проверим:
+```ruby
+[root@systemD system]# systemctl start httpd@first
+[root@systemD system]# systemctl status httpd@first
+● httpd@first.service - The Apache HTTP Server
+   Loaded: loaded (/etc/systemd/system/httpd@.service; disabled; vendor preset: disabled)
+   Active: active (running) since Tue 2020-12-22 14:23:23 UTC; 5s ago
+     Docs: man:httpd(8)
+           man:apachectl(8)
+ Main PID: 15998 (httpd)
+   Status: "Processing requests..."
+   CGroup: /system.slice/system-httpd.slice/httpd@first.service
+           ├─15998 /usr/sbin/httpd -DFOREGROUND
+           ├─15999 /usr/sbin/httpd -DFOREGROUND
+           ├─16000 /usr/sbin/httpd -DFOREGROUND
+           ├─16001 /usr/sbin/httpd -DFOREGROUND
+           ├─16002 /usr/sbin/httpd -DFOREGROUND
+           ├─16003 /usr/sbin/httpd -DFOREGROUND
+           └─16004 /usr/sbin/httpd -DFOREGROUND
+
+Dec 22 14:23:23 systemD systemd[1]: Starting The Apache HTTP Server...
+```
+
+
+
