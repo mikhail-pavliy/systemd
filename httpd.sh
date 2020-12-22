@@ -3,12 +3,12 @@
 ######################
 #Copy files
 
-ABC=/vagrant/httpd_data
-cp $ABC/httpd@.service /etc/systemd/system/
-cp $ABC/httpd-first /etc/sysconfig/
-cp $ABC/httpd-second /etc/sysconfig/
-cp $ABC/first.conf /etc/httpd/conf/
-cp $ABC/second.conf /etc/httpd/conf/
+SRC=/vagrant/httpd_data
+cp $SRC/httpd@.service /etc/systemd/system/
+cp $SRC/httpd-first /etc/sysconfig/
+cp $SRC/httpd-second /etc/sysconfig/
+cp $SRC/first.conf /etc/httpd/conf/
+cp $SRC/second.conf /etc/httpd/conf/
 
 #####################
 #Start two services 
