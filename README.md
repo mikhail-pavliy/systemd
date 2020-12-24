@@ -175,8 +175,8 @@ Dec 22 14:12:53 systemD systemd[1]: Started Spawn-fcgi startup service by Otus.
 Скопируем юнит файл и сделаем из него шаблон:
 ```ruby
 [root@systemD system]# cp /usr/lib/systemd/system/httpd.service /etc/systemd/system/httpd@.service
-[root@systemD system]# vi /etc/systemd/system/httpd.service
-[root@systemD system]# cat /etc/systemd/system/httpd.service
+[root@systemD system]# vi /etc/systemd/system/httpd@.service
+[root@systemD system]# cat /etc/systemd/system/httpd@.service
 [Unit]
 Description=The Apache HTTP Server
 After=network.target remote-fs.target nss-lookup.target
