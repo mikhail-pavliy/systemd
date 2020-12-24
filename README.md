@@ -236,6 +236,30 @@ Listen 8080
 
 Dec 22 14:23:23 systemD systemd[1]: Starting The Apache HTTP Server...
 ```
+и второй
+```ruby
+[root@systemD vagrant]# systemctl status httpd@second
+● httpd@second.service - The Apache HTTP Server
+   Loaded: loaded (/etc/systemd/system/httpd@.service; disabled; vendor preset: disabled)
+   Active: active (running) since Thu 2020-12-24 11:56:01 UTC; 28s ago
+     Docs: man:httpd(8)
+           man:apachectl(8)
+ Main PID: 1201 (httpd)
+   Status: "Total requests: 0; Current requests/sec: 0; Current traffic:   0 B/sec"
+   CGroup: /system.slice/system-httpd.slice/httpd@second.service
+           ├─1201 /usr/sbin/httpd -f conf/second.conf -DFOREGROUND
+           ├─1202 /usr/sbin/httpd -f conf/second.conf -DFOREGROUND
+           ├─1203 /usr/sbin/httpd -f conf/second.conf -DFOREGROUND
+           ├─1204 /usr/sbin/httpd -f conf/second.conf -DFOREGROUND
+           ├─1205 /usr/sbin/httpd -f conf/second.conf -DFOREGROUND
+           ├─1206 /usr/sbin/httpd -f conf/second.conf -DFOREGROUND
+           └─1207 /usr/sbin/httpd -f conf/second.conf -DFOREGROUND
+```
+```ruby
+[root@systemD vagrant]# ss -tnulp | grep httpd
+tcp    LISTEN     0      128    [::]:80                 [::]:*                   users:(("httpd",pid=1220,fd=4),("httpd",pid=1219,fd=4),("httpd",pid=1218,fd=4),("httpd",pid=1217,fd=4),("httpd",pid=1216,fd=4),("httpd",pid=1215,fd=4),("httpd",pid=1214,fd=4))
+tcp    LISTEN     0      128    [::]:8080               [::]:*                   users:(("httpd",pid=1207,fd=4),("httpd",pid=1206,fd=4),("httpd",pid=1205,fd=4),("httpd",pid=1204,fd=4),("httpd",pid=1203,fd=4),("httpd",pid=1202,fd=4),("httpd",pid=1201,fd=4))
+```
 
 
 
