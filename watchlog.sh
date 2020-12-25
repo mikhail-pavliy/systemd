@@ -1,6 +1,6 @@
 #!/bin/bash
 
-###################
+##################
 # Copy files
 
 SRC=/vagrant/wachlog_data
@@ -12,7 +12,7 @@ mv $SRC/watchlog.sh /opt/
 mv $SRC/watchlog.service /etc/systemd/system/
 mv $SRC/watchlog.timer /etc/systemd/system/
 
-##################
+#################
 # Run timer and service
 
 sudo systemctl enable watchlog.timer
